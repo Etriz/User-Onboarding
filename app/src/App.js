@@ -3,8 +3,8 @@ import Form from "./components/Form";
 import User from "./components/User";
 
 function App() {
-  const DEFAULT_USER = { id: "0", name: "ryan", email: "email@email.com" };
-  const [allUsers, setAllUsers] = useState([]);
+  const DEFAULT_USER = { id: "0", name: "ryan", email: "waffle@syrup.com" };
+  const [allUsers, setAllUsers] = useState([DEFAULT_USER]);
   return (
     <div className="container max-w-3xl">
       <Form allUsers={allUsers} setAllUsers={setAllUsers} />

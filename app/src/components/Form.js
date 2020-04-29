@@ -29,6 +29,7 @@ const Form = ({ allUsers, setAllUsers }) => {
       ...formState,
       [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
     };
+
     validateFormChange(e);
     setFormState(newFormData);
   };
@@ -47,16 +48,31 @@ const Form = ({ allUsers, setAllUsers }) => {
         });
       });
   };
+  const clearForm = () => {
+    setFormState({
+      name: "",
+      email: "",
+      password: "",
+      terms: false,
+    });
+  };
   const formSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submitted");
-    axios
-      .post("https://reqres.in/api/users", formState)
-      .then((res) => {
-        console.log("Post response", res);
-        setAllUsers([...allUsers, res.data]);
-      })
-      .catch((err) => console.log("Post error", err));
+    const emailExists = allUsers.find((user) => user.email === formState.email);
+    if (emailExists) {
+      setErrorState({ ...errorState, email: "That email is already in use" });
+      setIsButtonDisabled(true);
+    } else {
+      console.log("Form Submitted");
+      axios
+        .post("https://reqres.in/api/users", formState)
+        .then((res) => {
+          console.log("Post response", res);
+          setAllUsers([...allUsers, res.data]);
+          clearForm();
+        })
+        .catch((err) => console.log("Post error", err));
+    }
   };
   useEffect(() => {
     formSchema.isValid(formState).then((valid) => {
