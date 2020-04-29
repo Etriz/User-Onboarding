@@ -9,11 +9,19 @@ const Form = () => {
     password: "",
     terms: false,
   });
+  const [errorState, setErrorState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    terms: "",
+  });
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
   const formSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().min(6).required(),
-    terms: yup.boolean().oneOf([true]).required(),
+    name: yup.string().required("Name is required"),
+    email: yup.string().email().required("Email is required"),
+    password: yup.string().min(6).required("Password is required"),
+    terms: yup.boolean().oneOf([true]).required("Must agree to the Terms"),
   });
   const handleChange = (e) => {
     e.persist();
@@ -25,28 +33,36 @@ const Form = () => {
     setFormState(newFormData);
   };
   const validateFormChange = (e) => {
-    //!was working on this function
     yup
       .reach(formSchema, e.target.name)
-      .validate(e.target.value)
+      .validate(e.target.type === "checkbox" ? e.target.checked : e.target.value)
       .then((valid) => {
-        console.log(valid);
+        setErrorState({ ...errorState, [e.target.name]: "" });
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Invalid Form Error", err);
+        setErrorState({
+          ...errorState,
+          [e.target.name]: e.target.name === "terms" ? "Must agree to the Terms" : err.errors[0],
+        });
       });
   };
-  const formSubmit = () => {
+  const formSubmit = (e) => {
+    e.preventDefault();
     console.log("Form Submitted");
   };
   useEffect(() => {
-    formSchema.isValid(formState).then((valid) => console.log("Valid Form Input?", valid));
+    formSchema.isValid(formState).then((valid) => {
+      setIsButtonDisabled(!valid);
+    });
   }, [formState]);
   return (
     <form
       onSubmit={formSubmit}
       className="rounded-lg border border-gray-400 shadow-lg flex flex-wrap py-8 my-6">
-      <label htmlFor="name" className="w-3/4 mx-auto mb-4 flex justify-between items-center">
+      <label
+        htmlFor="name"
+        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
         Name
         <input
           id="name"
@@ -57,8 +73,13 @@ const Form = () => {
           className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
           onChange={handleChange}
         />
+        {errorState.name.length > 0 ? (
+          <p className="text-red-600 text-center ml-32 text-sm">{errorState.name}</p>
+        ) : null}
       </label>
-      <label htmlFor="email" className="w-3/4 mx-auto mb-4 flex justify-between items-center">
+      <label
+        htmlFor="email"
+        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
         Email
         <input
           id="email"
@@ -69,8 +90,13 @@ const Form = () => {
           className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
           onChange={handleChange}
         />
+        {errorState.email.length > 0 ? (
+          <p className="text-red-600 text-center ml-32 text-sm">{errorState.email}</p>
+        ) : null}
       </label>
-      <label htmlFor="password" className="w-3/4 mx-auto mb-4 flex justify-between items-center">
+      <label
+        htmlFor="password"
+        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
         Password
         <input
           id="password"
@@ -81,19 +107,31 @@ const Form = () => {
           className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
           onChange={handleChange}
         />
+        {errorState.password.length > 0 ? (
+          <p className="text-red-600 text-center ml-32 text-sm">{errorState.password}</p>
+        ) : null}
       </label>
-      <label htmlFor="terms" className="w-3/4 mx-auto block flex justify-center items-center">
-        <input
-          id="terms"
-          name="terms"
-          type="checkbox"
-          checked={formState.terms}
-          className="rounded-lg border border-gray-400 mr-4 my-4"
-          onChange={handleChange}
-        />
-        Terms and Conditions
+      <label
+        htmlFor="terms"
+        className="w-3/4 mx-auto block flex flex-wrap justify-center items-center">
+        <div className="w-full text-center">
+          <input
+            id="terms"
+            name="terms"
+            type="checkbox"
+            checked={formState.terms}
+            className="mr-4 mt-4"
+            onChange={handleChange}
+          />
+          Terms and Conditions
+        </div>
+        {errorState.terms.length > 0 ? (
+          <p className="text-red-600 text-center mx-auto text-sm">{errorState.terms}</p>
+        ) : null}
       </label>
-      <button className="w-64 mx-auto mt-4 py-1 bg-blue-100 border border-blue-400 rounded-lg shadow hover:bg-blue-400 hover:text-white">
+      <button
+        disabled={isButtonDisabled}
+        className="w-64 mx-auto mt-4 py-1 bg-blue-100 border border-blue-400 rounded-lg shadow hover:bg-blue-400 hover:text-white disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50">
         Sign Up
       </button>
       <p className="w-1/2 mx-auto mt-4 text-center text-xs">

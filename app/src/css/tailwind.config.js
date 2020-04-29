@@ -5,6 +5,11 @@ module.exports = {
       center: true,
     },
   },
-  variants: {},
+  variants: {
+    opacity: ["disabled"],
+    cursor: ["disabled"],
+    backgroundColor: ["disabled"],
+    textColor: ["disabled"],
+  },
   plugins: [],
 };
