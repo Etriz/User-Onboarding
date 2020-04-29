@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
+import axios from "axios";
 import * as yup from "yup";
 
 const Form = () => {
@@ -40,7 +40,7 @@ const Form = () => {
         setErrorState({ ...errorState, [e.target.name]: "" });
       })
       .catch((err) => {
-        console.log("Invalid Form Error", err);
+        // console.log("Invalid Form Error", err);
         setErrorState({
           ...errorState,
           [e.target.name]: e.target.name === "terms" ? "Must agree to the Terms" : err.errors[0],
@@ -50,6 +50,10 @@ const Form = () => {
   const formSubmit = (e) => {
     e.preventDefault();
     console.log("Form Submitted");
+    axios
+      .post("https://reqres.in/api/users", formState)
+      .then((res) => console.log("Post response", res))
+      .catch((err) => console.log("Post error", err));
   };
   useEffect(() => {
     formSchema.isValid(formState).then((valid) => {
