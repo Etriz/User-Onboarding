@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as yup from "yup";
 
-const Form = () => {
+const Form = ({ allUsers, setAllUsers }) => {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -52,7 +52,10 @@ const Form = () => {
     console.log("Form Submitted");
     axios
       .post("https://reqres.in/api/users", formState)
-      .then((res) => console.log("Post response", res))
+      .then((res) => {
+        console.log("Post response", res);
+        setAllUsers([...allUsers, res.data]);
+      })
       .catch((err) => console.log("Post error", err));
   };
   useEffect(() => {
@@ -63,7 +66,7 @@ const Form = () => {
   return (
     <form
       onSubmit={formSubmit}
-      className="rounded-lg border border-gray-400 shadow-lg flex flex-wrap py-8 my-6">
+      className="rounded-lg border border-gray-400 shadow-lg flex flex-wrap py-8 my-6 max-w-lg mx-auto">
       <label
         htmlFor="name"
         className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
@@ -135,7 +138,7 @@ const Form = () => {
       </label>
       <button
         disabled={isButtonDisabled}
-        className="w-64 mx-auto mt-4 py-1 bg-blue-100 border border-blue-400 rounded-lg shadow hover:bg-blue-400 hover:text-white disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50">
+        className="w-64 mx-auto mt-4 py-1 bg-blue-100 border border-blue-400 rounded-lg shadow hover:bg-blue-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
         Sign Up
       </button>
       <p className="w-1/2 mx-auto mt-4 text-center text-xs">
