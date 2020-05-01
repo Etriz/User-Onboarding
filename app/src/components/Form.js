@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as yup from "yup";
+import InputType from "./InputType";
 
 const Form = ({ allUsers, setAllUsers }) => {
   const [formState, setFormState] = useState({
@@ -83,57 +84,27 @@ const Form = ({ allUsers, setAllUsers }) => {
     <form
       onSubmit={formSubmit}
       className="rounded-lg border border-gray-400 shadow-lg flex flex-wrap py-8 my-6 max-w-lg mx-auto">
-      <label
-        htmlFor="name"
-        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
-        Name
-        <input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="Name"
-          value={formState.name}
-          className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
-          onChange={handleChange}
-        />
-        {errorState.name.length > 0 ? (
-          <p className="text-red-600 text-center ml-32 text-sm">{errorState.name}</p>
-        ) : null}
-      </label>
-      <label
-        htmlFor="email"
-        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
-        Email
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formState.email}
-          className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
-          onChange={handleChange}
-        />
-        {errorState.email.length > 0 ? (
-          <p className="text-red-600 text-center ml-32 text-sm">{errorState.email}</p>
-        ) : null}
-      </label>
-      <label
-        htmlFor="password"
-        className="w-3/4 mx-auto mb-4 flex flex-wrap justify-between items-center">
-        Password
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={formState.password}
-          className="rounded-lg outline-none border border-gray-400 p-1 focus:border-blue-400 shadow"
-          onChange={handleChange}
-        />
-        {errorState.password.length > 0 ? (
-          <p className="text-red-600 text-center ml-32 text-sm">{errorState.password}</p>
-        ) : null}
-      </label>
+      <InputType
+        inputId={"Name"}
+        inputFieldType={"text"}
+        formState={formState}
+        errorState={errorState}
+        handleChange={handleChange}
+      />
+      <InputType
+        inputId={"Email"}
+        inputFieldType={"email"}
+        formState={formState}
+        errorState={errorState}
+        handleChange={handleChange}
+      />
+      <InputType
+        inputId={"Password"}
+        inputFieldType={"password"}
+        formState={formState}
+        errorState={errorState}
+        handleChange={handleChange}
+      />
       <label
         htmlFor="terms"
         className="w-3/4 mx-auto block flex flex-wrap justify-center items-center">
